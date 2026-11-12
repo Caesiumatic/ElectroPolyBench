@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "electropolybench"
 version = "0.1.0"
-description = "Retrospective active-learning benchmark seed for electropolymerization / OMIEC materials"
+description = "Retrospective active-learning replay for electropolymerization experiments"
 readme = "README.md"
 requires-python = ">=3.9"
 authors = [{ name = "ElectroPolyBench contributors" }]
@@ -18,12 +18,7 @@ dependencies = [
     "matplotlib>=3.6",
 ]
 
-# NOTE: BoTorch / Ax are the planned v2 upgrade for principled multi-objective
-# and multi-fidelity Bayesian optimization. They are intentionally NOT required
-# for v1 — the whole point of the seed is to prove the retrospective-replay
-# harness with a minimal, easy-to-install scikit-learn stack.
 [project.optional-dependencies]
-v2 = ["botorch", "ax-platform", "gpytorch", "torch"]
 dev = ["pytest>=7"]
 
 [tool.setuptools]

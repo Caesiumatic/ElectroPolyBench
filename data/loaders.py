@@ -1,15 +1,14 @@
 """Dataset loaders for ElectroPolyBench.
 
-Two sources, clearly labelled so they are never confused:
+Available sources:
 
 1. ``load_panda()``  -- the REAL self-driving-lab dataset of electrodeposited
    PEDOT:PSS electrochromic films (Quinn et al., *Mater. Horiz.* 2024).
 2. ``make_synthetic_surface()`` -- a DOCUMENTED synthetic 3-input surface with a single
-   known optimum, used to prove the harness is correct and as a fallback if PANDA cannot
-   be downloaded. It is ALWAYS named "synthetic" and never presented as PANDA.
+   known optimum for offline replay checks.
 
-``load_dataset()`` tries the real PANDA data first and falls back to the synthetic
-surface, returning both the DataFrame and a metadata dict recording which is active.
+``load_dataset()`` returns the requested source and its metadata. PANDA download
+or parsing errors propagate to the caller.
 
 Canonical schema (both sources expose exactly these columns):
     INPUT_COLUMNS  = ["edot_concentration_M", "deposition_potential_V", "deposition_time_s"]
@@ -182,28 +181,21 @@ def load_dataset(prefer_real: bool = True, include_post_al: bool = False,
                  verbose: bool = True):
     """Return ``(df, info)`` for the active dataset.
 
-    Tries the real PANDA data first (when ``prefer_real``); on any failure falls back to
-    the synthetic surface. ``info`` is a dict recording which source is active and why,
-    so downstream code and figures can label themselves honestly.
+    ``prefer_real=True`` selects PANDA; ``False`` selects the synthetic surface.
     """
     if prefer_real:
-        try:
-            df = load_panda(include_post_al=include_post_al)
-            info = {
-                "name": "PANDA (real)",
-                "is_real": True,
-                "n": len(df),
-                "source_url": df.attrs.get("source_url"),
-                "doi": df.attrs.get("doi"),
-                "reason": "Downloaded real PANDA CSVs from BU-KABlab/PANDA-SDL.",
-            }
-            if verbose:
-                print(f"[loaders] Loaded REAL PANDA dataset: {len(df)} experiments.")
-            return df, info
-        except Exception as exc:  # noqa: BLE001 -- any failure -> documented fallback
-            if verbose:
-                print(f"[loaders] PANDA download/parse failed ({exc!r}); "
-                      f"falling back to SYNTHETIC surface.")
+        df = load_panda(include_post_al=include_post_al)
+        info = {
+            "name": "PANDA (real)",
+            "is_real": True,
+            "n": len(df),
+            "source_url": df.attrs.get("source_url"),
+            "doi": df.attrs.get("doi"),
+            "reason": "Downloaded PANDA CSVs from BU-KABlab/PANDA-SDL.",
+        }
+        if verbose:
+            print(f"[loaders] Loaded PANDA: {len(df)} experiments.")
+        return df, info
 
     df = make_synthetic_surface()
     info = {
@@ -212,10 +204,8 @@ def load_dataset(prefer_real: bool = True, include_post_al: bool = False,
         "n": len(df),
         "source_url": None,
         "doi": None,
-        "reason": ("prefer_real=False" if not prefer_real
-                   else "PANDA download/parse failed; using documented synthetic fallback."),
+        "reason": "Synthetic surface selected explicitly.",
     }
     if verbose:
-        print(f"[loaders] Using SYNTHETIC surface: {len(df)} grid points "
-              f"(NOT PANDA data).")
+        print(f"[loaders] Loaded synthetic surface: {len(df)} grid points.")
     return df, info

@@ -1,14 +1,7 @@
-"""Pluggable surrogate models for the AL replay harness.
+"""Surrogate models with a shared fit and predictive mean/standard-deviation interface.
 
-A surrogate maps inputs X -> a *probabilistic* prediction (mean, std). The replay
-engine and acquisition functions only ever touch the small interface below, so new
-surrogates (e.g. a BoTorch GP in v2) can be dropped in without touching anything else.
-
-v1 ships two scikit-learn surrogates:
-  * GPSurrogate  -- GaussianProcessRegressor with input standardization and a sensible
-                    Matern + white-noise kernel. Principled predictive std.
-  * RFSurrogate  -- RandomForestRegressor; std estimated from per-tree disagreement.
-"""
+The Gaussian process uses standardized inputs and a Matern plus white-noise
+kernel. The random forest estimates uncertainty from per-tree disagreement."""
 
 from __future__ import annotations
 

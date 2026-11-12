@@ -1,11 +1,12 @@
 """Headline experiment: replay all strategies on the loaded dataset.
 
-Loads the real PANDA dataset (or the documented synthetic fallback), replays every
+Loads PANDA or an explicitly selected synthetic surface, replays every
 acquisition strategy over many random-seed restarts, aggregates the mean +/- CI of the
 simple-regret curve, and writes:
 
-    results/replay_results.csv      -- tidy per-(strategy, restart, step) log
-    results/queries_to_target.png   -- headline "queries-to-target vs strategy" figure
+    replay_results.csv      -- per-(strategy, restart, step) log
+    queries_to_target.png   -- queries-to-target comparison
+    dataset.csv, run.json   -- input snapshot and run settings
 
 Run:
     python experiments/run_panda_replay.py
@@ -15,6 +16,8 @@ Run:
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import sys
 from pathlib import Path
 
@@ -149,7 +152,7 @@ def plot_headline(long_df, summary, global_best, info, out_png, eps=0.05):
     ax_right.grid(axis="y", alpha=0.3)
     plt.setp(ax_right.get_xticklabels(), rotation=20, ha="right")
 
-    tag = "REAL PANDA" if info["is_real"] else "SYNTHETIC (not PANDA)"
+    tag = "PANDA" if info["is_real"] else "SYNTHETIC"
     fig.suptitle(f"ElectroPolyBench — retrospective AL replay  |  dataset: {info['name']} "
                  f"[{tag}], N={info['n']}, global best ΔE00={global_best:.2f}",
                  fontsize=11)
@@ -162,26 +165,39 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--restarts", type=int, default=20)
     ap.add_argument("--seed-size", type=int, default=4)
+    ap.add_argument("--base-seed", type=int, default=0)
+    ap.add_argument("--output-dir", type=Path,
+                    help="output directory (default: runs/panda or runs/synthetic)")
     ap.add_argument("--budget", type=int, default=None,
                     help="experiments to reveal (default: whole pool)")
     ap.add_argument("--surrogate", default="gp", choices=["gp", "rf"])
     ap.add_argument("--eps", type=float, default=0.05)
     ap.add_argument("--synthetic", action="store_true",
-                    help="force the synthetic surface instead of real PANDA")
+                    help="use the synthetic surface for an offline run")
     ap.add_argument("--include-post-al", action="store_true")
     args = ap.parse_args()
 
-    results_dir = _ROOT / "results"
-    results_dir.mkdir(exist_ok=True)
+    results_dir = args.output_dir or _ROOT / "runs" / ("synthetic" if args.synthetic else "panda")
 
     df, info = load_dataset(prefer_real=not args.synthetic,
                             include_post_al=args.include_post_al)
+    results_dir.mkdir(parents=True, exist_ok=True)
+    dataset_path = results_dir / "dataset.csv"
+    df.to_csv(dataset_path, index=False)
+    metadata = {
+        "dataset": info,
+        "dataset_sha256": hashlib.sha256(dataset_path.read_bytes()).hexdigest(),
+        "strategies": STRATEGIES,
+        "settings": {k: v for k, v in vars(args).items() if k != "output_dir"},
+    }
+    (results_dir / "run.json").write_text(json.dumps(metadata, indent=2) + "\n")
     print(f"[run] dataset={info['name']} (is_real={info['is_real']}), N={info['n']}, "
           f"reason={info['reason']}")
 
     y_pool = df[OBJECTIVE_COLUMN].to_numpy(float)
     long_df, global_best = run_all(
-        df, STRATEGIES, args.restarts, args.seed_size, args.budget, args.surrogate
+        df, STRATEGIES, args.restarts, args.seed_size, args.budget, args.surrogate,
+        base_seed=args.base_seed,
     )
 
     out_csv = results_dir / "replay_results.csv"
@@ -189,6 +205,7 @@ def main():
     print(f"[run] wrote {out_csv}  ({len(long_df)} rows)")
 
     qdf, summary = summarize_queries_to_target(long_df, global_best, y_pool, eps=args.eps)
+    qdf.to_csv(results_dir / "queries_to_target_runs.csv", index=False)
     summary.to_csv(results_dir / "queries_to_target_summary.csv", index=False)
 
     out_png = results_dir / "queries_to_target.png"

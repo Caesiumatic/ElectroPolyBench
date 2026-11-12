@@ -1,16 +1,8 @@
-"""Retrospective pool-based active-learning replay engine.
+"""Pool-based active-learning replay over completed experiments.
 
-The core idea of the benchmark: take a *finished* experimental campaign as a fixed pool
-of (X, y) rows, hide all the labels, then let a strategy re-discover the good points one
-query at a time. Because every label is already known, we can replay any strategy as many
-times as we like and ask the only question that matters for a self-driving lab:
-
-    "How few experiments do you need to reach (near) the best outcome?"
-
-The engine is strategy- and dataset-agnostic: it only sees an (X, y) table, a strategy
-function (see ``acquisitions``), a surrogate factory (see ``surrogates``), a seed size,
-and a budget.
-"""
+Each step fits on revealed labels, queries one unobserved condition, and records
+the best outcome so far. The engine accepts input features, outcomes, a query
+strategy, a surrogate, and a seeded query budget."""
 
 from __future__ import annotations
 

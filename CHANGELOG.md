@@ -1,5 +1,35 @@
 # Changelog
 
+## 2026-11-12 — repository update
+
+- Prepared the reviewed source cleanup, concise README, and supporting documentation for publication on the existing main branch.
+- Checked document links and the final commit contents; retained the previously recorded code validation.
+
+## 2026-11-12 — concise repository introduction
+
+- Removed the standalone project-value section; retained methods, recorded results, and documentation links.
+- Documentation-only local revision, not committed or published.
+
+## 2026-11-11 — commit metadata maintenance
+
+- Updated existing remote history while preserving file trees, human authors, timestamps, and commit topology.
+- Aligned local `main` and its index with the complete remote history, retaining all pending working files. The README and source revision remains uncommitted and unpublished.
+
+## 2026-11-11 — project overview and experiment guide
+
+- Applied the approved README focused on the problem, approach, case study, and value.
+- Moved setup, CLI options, output formats, interval definitions, and code navigation into `docs/experiments.md`.
+- Checked local document and image links. No code, recorded results, branches, or commits changed in this documentation follow-up.
+
+## 2026-11-11 — local source and experiment-entry cleanup
+
+- Restored the complete tracked source from local commit `1642518092c85cf762b56a949ed6ca1bac7e0f95` into the primary checkout without changing its branch or HEAD.
+- Rewrote the README around the replay method, recorded comparison, and runnable entry points.
+- Made PANDA loading explicit: download/parse failures propagate; synthetic data requires explicit selection.
+- Added output-directory/base-seed options, input snapshots and hashes, run settings, and per-restart metrics. Default runs no longer overwrite recorded results.
+- Added dataset-selection regression tests; removed unused future optional dependencies and stale fallback prose. Retained the previous status as a historical record.
+- Verified 7 tests, an offline 10-run replay, and unchanged recorded PANDA artifacts.
+
 ## 2026-06-19 — seed v1: retrospective AL replay harness, proven on real PANDA
 Initial commit of ElectroPolyBench — a minimal, dataset- and strategy-agnostic retrospective
 active-learning replay benchmark for electropolymerization / OMIEC materials, answering "how
