@@ -1,4 +1,4 @@
-"""Dataset loaders for ElectroPolyBench."""
+"""Dataset loaders for electropoly-active-compute."""
 
 from .loaders import (
     INPUT_COLUMNS,

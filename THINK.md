@@ -7,7 +7,7 @@ judgment, a tradeoff, or a sign-off — NOT routine engineering debt (those stay
 Entries are opened, updated as thinking evolves, and marked `decided`/`parked` with a resolution;
 this file is neither a snapshot nor append-only.
 
-_Last updated: 2026-06-19 (v1 seed session)_
+_Research entries: 2026-06-19; repository names and navigation updated 2026-11-13._
 
 ## How to read this
 
@@ -23,7 +23,7 @@ resolution is.
 | T3 | Pool replay measures the wrong optimum (measured pool vs continuous surface) | open | self (rigor) | conceptual |
 | T4 | Which datasets to add for v2 | open | group-meeting | lit/data-curation |
 | T5 | sklearn GP now vs BoTorch/Ax (principled + multi-objective BO) | exploring (staged) | group-meeting | compute/eng |
-| T6 | Multi-fidelity low-fidelity layer — GATED on CombHTS xTB→DFT Fit-1 R² | parked (gated) | PI sign-off | compute-heavy |
+| T6 | Multi-fidelity low-fidelity layer — GATED on electropoly-jointopt-hts xTB→DFT Fit-1 R² | parked (gated) | PI sign-off | compute-heavy |
 | T7 | Is a GP well-posed on a 4-point seed? surrogate choice for tiny data | open | self (rigor) | one compute sweep |
 | T8 | Is space_filling a fair baseline, or a strawman? | exploring | group-meeting | scope/policy |
 
@@ -46,7 +46,7 @@ resolution is.
   AL-vs-baseline as the only durable v1 claim.
 - **Resolves when**: a seed/restart sweep is run and STATUS/README state the ranking only at the
   resolution the CIs actually support.
-- **Links**: [STATUS open debt #5](STATUS.md#open-debts); [experiments/run_panda_replay.py](experiments/run_panda_replay.py).
+- **Links**: [Archived status debt #5](docs/history/status-before-2026-11-11.md#open-debts); [experiments/run_panda_replay.py](experiments/run_panda_replay.py).
 
 ## T2 — What "queries-to-target" should target
 - **Status**: exploring
@@ -97,7 +97,7 @@ resolution is.
   queries-to-target as continuous-surface regret.
 - **Resolves when**: the caveat is documented (done in STATUS) AND the LHS-only-vs-full-pool
   control is run to bound the AL-collected-pool selection effect.
-- **Links**: [STATUS scientific caution](STATUS.md#scientific-caution); [data/loaders.py](data/loaders.py) (the `source` column distinguishes training/LHS vs AL points).
+- **Links**: [Archived scientific caution](docs/history/status-before-2026-11-11.md#scientific-caution); [data/loaders.py](data/loaders.py) (the `source` column distinguishes training/LHS vs AL points).
 
 ## T4 — Which datasets to add for v2
 - **Status**: open
@@ -119,7 +119,7 @@ resolution is.
   REAL on-domain point; keep PANDA as the flagship real dataset.
 - **Resolves when**: the group confirms the 2nd/3rd datasets and their order, and each lands as a
   loader with documented provenance.
-- **Links**: [STATUS open debt #1](STATUS.md#open-debts); [README v2 roadmap](README.md#v2-roadmap).
+- **Links**: [Archived status debt #1](docs/history/status-before-2026-11-11.md#open-debts); [Current remaining work](STATUS.md#remaining-work).
 
 ## T5 — sklearn GP now vs BoTorch/Ax (principled + multi-objective BO)
 - **Status**: exploring (staged: sklearn now, BoTorch later)
@@ -141,9 +141,11 @@ resolution is.
   opt-in, justified primarily by multi-objective / multi-fidelity, not by single-objective AL.
 - **Resolves when**: the group agrees BoTorch is warranted (i.e. the multi-objective question is
   in scope) and the BoTorch path first reproduces the sklearn single-objective result.
-- **Links**: [STATUS open debt #2](STATUS.md#open-debts); [pyproject.toml](pyproject.toml) (`[project.optional-dependencies] v2`); [T6](#t6--multi-fidelity-low-fidelity-layer--gated-on-combhts-xtbdft-fit-1-r).
+- **Links**: [Archived status debt #2](docs/history/status-before-2026-11-11.md#open-debts); [pyproject.toml](pyproject.toml) (current optional dependencies; the proposed `v2` extra is not implemented); [T6](#t6-multi-fidelity-gate).
 
-## T6 — Multi-fidelity low-fidelity layer — GATED on CombHTS xTB→DFT Fit-1 R²
+<a id="t6-multi-fidelity-gate"></a>
+
+## T6 — Multi-fidelity low-fidelity layer — GATED on electropoly-jointopt-hts xTB→DFT Fit-1 R²
 - **Status**: parked (gated on an external result)
 - **Forum**: PI sign-off
 - **Cost**: compute-heavy
@@ -151,20 +153,20 @@ resolution is.
   OMG-pretrained features, or a cheap computed descriptor — used to triage before the expensive
   experiment), and is it worth the engineering?
 - **Why it matters**: Multi-fidelity AL only pays off if the cheap fidelity actually predicts the
-  expensive one. That is exactly the question the SIBLING project CombHTS answers for
+  expensive one. That is exactly the question the SIBLING project electropoly-jointopt-hts answers for
   electropolymerization via its two-stage calibration: Fit-1 is xTB→DFT. If cheap xTB does NOT
   predict DFT well there (low Fit-1 R²), a multi-fidelity layer HERE is built on sand and should
   not be funded; if Fit-1 R² is high, the analogous low-fidelity→high-fidelity triage is
   promising and worth porting.
 - **Thinking / options**: This is a deliberate cross-project gate, not an internal one. DECISION
-  RULE: do not start the multi-fidelity layer until the CombHTS xTB→DFT Fit-1 R² is known from
+  RULE: do not start the multi-fidelity layer until the electropoly-jointopt-hts xTB→DFT Fit-1 R² is known from
   its live g16 DFT-calibration batch; treat that R² as the go/no-go evidence. (As of 2026-06-19
-  the CombHTS live batch is still running — see CombHTS STATUS/THINK T4 — so this stays parked.)
-- **Current lean**: parked until the CombHTS Fit-1 R² lands; then PI decides go/no-go on the
+  the electropoly-jointopt-hts live batch is still running — see electropoly-jointopt-hts STATUS/THINK T4 — so this stays parked.)
+- **Current lean**: parked until the electropoly-jointopt-hts Fit-1 R² lands; then PI decides go/no-go on the
   multi-fidelity layer based on that R².
-- **Resolves when**: the CombHTS xTB→DFT Fit-1 R² is reported and the PI signs off on whether to
+- **Resolves when**: the electropoly-jointopt-hts xTB→DFT Fit-1 R² is reported and the PI signs off on whether to
   build the multi-fidelity layer.
-- **Links**: [STATUS open debt #4](STATUS.md#open-debts); [README v2 roadmap](README.md#v2-roadmap); CombHTS THINK T4 (the xTB→DFT calibration that supplies the gating R²); [T5](#t5--sklearn-gp-now-vs-botorchax-principled--multi-objective-bo).
+- **Links**: [Archived status debt #4](docs/history/status-before-2026-11-11.md#open-debts); [Current remaining work](STATUS.md#remaining-work); [electropoly-jointopt-hts calibration record](https://github.com/Caesiumatic/electropoly-jointopt-hts/blob/main/docs/runs/2026-06-19_dftcal-417442-gasphase.md) (the xTB→DFT calibration that supplies the gating R²); [T5](#t5--sklearn-gp-now-vs-botorchax-principled--multi-objective-bo).
 
 ## T7 — Is a GP well-posed on a 4-point seed? surrogate choice for tiny data
 - **Status**: open
@@ -209,7 +211,7 @@ resolution is.
   the baseline of record; add a space-filling-seed→AL variant in v2 to avoid the strawman reading.
 - **Resolves when**: the group agrees which baseline is the headline comparator and the two-phase
   variant is added (or explicitly declined).
-- **Links**: [STATUS open debt #6](STATUS.md#open-debts); [src/electropolybench/acquisitions.py](src/electropolybench/acquisitions.py).
+- **Links**: [Archived status debt #6](docs/history/status-before-2026-11-11.md#open-debts); [src/electropolybench/acquisitions.py](src/electropolybench/acquisitions.py).
 
 ## Decision log
 

@@ -153,7 +153,7 @@ def plot_headline(long_df, summary, global_best, info, out_png, eps=0.05):
     plt.setp(ax_right.get_xticklabels(), rotation=20, ha="right")
 
     tag = "PANDA" if info["is_real"] else "SYNTHETIC"
-    fig.suptitle(f"ElectroPolyBench — retrospective AL replay  |  dataset: {info['name']} "
+    fig.suptitle(f"electropoly-active-compute — retrospective AL replay  |  dataset: {info['name']} "
                  f"[{tag}], N={info['n']}, global best ΔE00={global_best:.2f}",
                  fontsize=11)
     fig.tight_layout(rect=[0, 0, 1, 0.96])

@@ -4,9 +4,11 @@
 
 ## Setup
 
-Use Python 3.9 or later. Run these commands from the repository root:
+Use Python 3.9 or later. Clone the repository and install its dependencies:
 
 ```bash
+git clone https://github.com/Caesiumatic/electropoly-active-compute.git
+cd electropoly-active-compute
 python -m pip install -e '.[dev]'
 python -m pytest -q
 ```

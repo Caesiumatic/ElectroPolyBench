@@ -5,7 +5,7 @@
 The replay package compares five acquisition strategies through shared GP and
 random-forest surrogate interfaces. The recorded PANDA comparison covers 68
 measured conditions, 20 restarts, and four initial observations. Its CSVs and
-figure are preserved in `results/`.
+figure are available in `results/`.
 
 New runs select PANDA or synthetic data explicitly and write to separate run
 directories. Each run records its input CSV, SHA-256, settings, per-step
@@ -15,7 +15,22 @@ The [README](README.md) presents the method and recorded query-efficiency
 comparison. [The experiment guide](docs/experiments.md) documents setup, options,
 outputs, confidence intervals, and source entry points.
 
-## Documentation verification — 2026-11-13
+## Repository name synchronization — 2026-11-13
+
+- Updated the README introduction, module descriptions, contributor display name,
+  and plot heading to `electropoly-active-compute`. Python imports and the package
+  distribution name remain `electropolybench`.
+- Updated the sibling-project references and repaired research-note navigation;
+  the multi-fidelity decision remains parked.
+- Regenerated the README figure with `plot_headline` in
+  `experiments/run_panda_replay.py` from `results/replay_results.csv` and
+  `results/queries_to_target_summary.csv`. Its source data,
+  strategy summaries, and uncertainty calculations are unchanged; no replay or
+  laboratory experiments were run.
+- Checked current documentation links, Python syntax, the figure layout, and
+  `git diff --check`. Old names remain in dated history and package paths.
+
+## Documentation verification — 2026-11-13 (earlier revision)
 
 - Renamed the repository to `electropoly-active-compute` and updated the README
   title; the Python package remains `electropolybench`.

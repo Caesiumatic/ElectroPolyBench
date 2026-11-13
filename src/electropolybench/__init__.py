@@ -1,4 +1,4 @@
-"""ElectroPolyBench: retrospective active-learning replay for electropolymerization experiments."""
+"""electropoly-active-compute: retrospective active-learning replay for electropolymerization experiments."""
 
 from . import acquisitions, metrics, replay, surrogates
 

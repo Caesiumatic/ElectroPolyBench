@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-13 — repository name synchronization
+
+- Updated the README introduction, module descriptions, contributor display name, and plot heading to `electropoly-active-compute`, while retaining the `electropolybench` package and import paths.
+- Updated sibling-project references to `electropoly-jointopt-hts` and repaired stale research-note anchors; research decisions remain unchanged.
+- Regenerated the README figure with `experiments/run_panda_replay.py::plot_headline` from the unchanged `results/replay_results.csv` and `results/queries_to_target_summary.csv`; no experiments were rerun. Checked documentation links, Python syntax, figure layout, and whitespace.
+
 ## 2026-11-13 — repository rename
 
 - Renamed `Caesiumatic/ElectroPolyBench` to `Caesiumatic/electropoly-active-compute` and updated the README and status titles. Package imports and experiment records retain their existing names.
