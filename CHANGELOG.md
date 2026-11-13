@@ -1,5 +1,11 @@
 # Changelog
 
+## 2026-11-13 — documentation and comment clarity
+
+- Reframed the overview around query efficiency in a fixed experimental pool, keeping every recorded strategy result and its scope.
+- Clarified synthetic dataset selection, relative target thresholds, and acquisition/replay docstrings.
+- Refreshed the status snapshot. Verified documentation links, whitespace, and unchanged Python behavior after excluding docstrings from the syntax-tree comparison; recorded results remain unchanged.
+
 ## 2026-11-12 — repository update
 
 - Prepared the reviewed source cleanup, concise README, and supporting documentation for publication on the existing main branch.

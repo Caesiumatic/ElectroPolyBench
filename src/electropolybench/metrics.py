@@ -19,10 +19,11 @@ def queries_to_target(queries, best_y, global_best, eps: float = 0.05,
     ----------
     queries  : cumulative experiment count after each step (monotonically increasing).
     best_y   : best revealed objective after each step.
-    global_best : the true pool maximum.
-    eps : tolerance. If ``relative`` (default), the target is ``(1 - eps) * global_best``
-          for non-negative objectives; otherwise the target is ``global_best - eps``
-          (absolute units of y).
+    global_best : maximum measured objective in the fixed pool.
+    eps : tolerance. In relative mode, the target is ``(1 - eps) * global_best``
+          for a non-negative pool maximum and ``(1 + eps) * global_best`` for a
+          negative maximum. In absolute mode, the target is ``global_best - eps``
+          in the units of y.
     relative : choose relative vs absolute tolerance.
 
     Returns
@@ -68,12 +69,12 @@ def fraction_of_budget_to_top5(queries, best_y, y_pool, budget=None,
 
 
 def calibration(*args, **kwargs):
-    """[v2 STUB] Uncertainty-calibration metric for probabilistic surrogates.
+    """Reserved interface for a future uncertainty-calibration metric.
 
     Planned for v2: compare predicted vs. empirical coverage of the surrogate's
     predictive intervals along the replay trajectory (e.g. a reliability diagram /
-    expected calibration error), to test whether well-calibrated UQ actually buys
-    data efficiency. Requires logging per-step (mean, std) predictions, which the v1
-    engine does not yet store.
+    expected calibration error). This would relate predictive coverage to data
+    efficiency. It requires per-step (mean, std) predictions, which the v1 engine
+    does not store; calling this function raises ``NotImplementedError``.
     """
     raise NotImplementedError("calibration() is a v2 stub; see docstring and README roadmap.")

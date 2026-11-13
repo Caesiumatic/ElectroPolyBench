@@ -18,7 +18,7 @@ from .surrogates import make_surrogate
 class ReplayResult:
     """Log of one replay run.
 
-    ``revealed_order`` / ``revealed_y`` record EVERY revealed point in reveal order
+    ``revealed_order`` / ``revealed_y`` record every revealed point in reveal order
     (length == total experiments revealed). ``queries`` / ``best_y`` record the learning
     *curve*: the initial random seed is logged as a single step at ``queries == seed_size``,
     and each subsequent active-learning step adds exactly one experiment.
@@ -98,7 +98,7 @@ def run_replay(
         strategy=strategy, seed_size=seed_size, budget=budget, global_best=global_best
     )
 
-    # --- random seed subset (logged as ONE initial curve step) --------------
+    # Log the initial random subset as one learning-curve step.
     revealed_mask = np.zeros(n_pool, dtype=bool)
     seed_idx = rng.choice(n_pool, size=seed_size, replace=False)
     for idx in seed_idx:

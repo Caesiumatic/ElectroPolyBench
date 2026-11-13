@@ -74,9 +74,9 @@ class GPSurrogate(Surrogate):
 class RFSurrogate(Surrogate):
     """Random-forest surrogate; predictive std from per-tree disagreement.
 
-    The mean is the usual forest prediction; the std is the standard deviation of the
-    individual tree predictions, which is a cheap (if optimistic) uncertainty proxy.
-    A small floor is added so that acquisition functions never divide by zero.
+    The mean averages the tree predictions; the standard deviation measures
+    their disagreement. This uncertainty proxy can underestimate predictive
+    error. A positive floor keeps acquisition denominators nonzero.
     """
 
     def __init__(self, n_estimators: int = 300, random_state: int | None = 0,

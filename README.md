@@ -1,9 +1,9 @@
 # ElectroPolyBench
 
-ElectroPolyBench compares how efficiently active-learning strategies find
-promising experimental conditions. It replays completed experiments so that
-different strategies can be evaluated against the same measured outcomes,
-without running a new laboratory campaign for every comparison.
+ElectroPolyBench measures how many experiments a query strategy needs to find
+high-performing electropolymerization conditions. It replays a completed
+experimental campaign as a fixed pool, giving each strategy access to the same
+measured outcomes one observation at a time.
 
 ## Approach
 
@@ -35,8 +35,10 @@ observed contrast:
 | Random sampling | 26.35 |
 | Space filling | 52.95 |
 
-These results describe selection within the measured 68-condition pool.
-Confidence intervals and learning curves are included in the detailed results.
+Greedy exploitation reached the target in 19.35 queries on average, compared
+with 26.35 for random sampling in this 68-condition pool. Query counts include
+the four initial observations. The detailed results report confidence intervals
+across restarts and the full learning curves.
 
 ![Learning curves and query efficiency](results/queries_to_target.png)
 

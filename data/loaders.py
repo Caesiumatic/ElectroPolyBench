@@ -2,9 +2,9 @@
 
 Available sources:
 
-1. ``load_panda()``  -- the REAL self-driving-lab dataset of electrodeposited
+1. ``load_panda()`` -- the measured self-driving-lab dataset of electrodeposited
    PEDOT:PSS electrochromic films (Quinn et al., *Mater. Horiz.* 2024).
-2. ``make_synthetic_surface()`` -- a DOCUMENTED synthetic 3-input surface with a single
+2. ``make_synthetic_surface()`` -- a synthetic 3-input surface with a single
    known optimum for offline replay checks.
 
 ``load_dataset()`` returns the requested source and its metadata. PANDA download
@@ -87,7 +87,8 @@ def load_panda(include_post_al: bool = False, timeout: float = 30.0) -> pd.DataF
 
     Downloads the authors' CSVs from GitHub (``BU-KABlab/PANDA-SDL``) and returns a
     tidy DataFrame with exactly ``INPUT_COLUMNS + [OBJECTIVE_COLUMN]`` plus a
-    ``source`` label column. Raises on any network/parse error so callers can fall back.
+    ``source`` label column. Network and parsing errors propagate to the caller;
+    synthetic data is selected separately through ``load_dataset(prefer_real=False)``.
 
     Parameters
     ----------
@@ -120,32 +121,31 @@ def load_panda(include_post_al: bool = False, timeout: float = 30.0) -> pd.DataF
 
 
 # ---------------------------------------------------------------------------
-# Synthetic fallback surface
+# Synthetic surface for offline checks
 # ---------------------------------------------------------------------------
 def make_synthetic_surface(n_per_dim: int = 6, noise: float = 0.0,
                            seed: int = 0) -> pd.DataFrame:
-    """Documented synthetic 3-input surface with ONE known global optimum.
+    """Sample a synthetic 3-input Gaussian surface, with optional seeded noise.
 
-    This is NOT PANDA — it is a deliberately simple, fully-specified function used to
-    (a) prove the replay harness is correct in unit tests and (b) provide a deterministic
-    fallback if the real PANDA download fails.
+    This explicitly selected test dataset provides a fully specified function for
+    replay unit tests and offline examples. Its metadata identifies it as synthetic.
 
     The inputs span PANDA-like physical ranges:
         edot_concentration_M  in [0.01, 0.10]
         deposition_potential_V in [0.60, 1.80]
         deposition_time_s      in [1.0, 100.0]
 
-    The objective is a single smooth Gaussian bump (anisotropic, on normalized inputs)
-    with its maximum at the center of each range, so the global optimum is known exactly::
+    Before noise is added, the objective is an anisotropic Gaussian bump on
+    normalized inputs, with its continuous maximum at the center of each range::
 
         x_norm = (x - lo) / (hi - lo)            # each input -> [0, 1]
         objective = AMP * exp(-sum_d ((x_norm_d - 0.5) / WIDTH_d)^2)
 
-    giving a clean unimodal landscape that AL should solve in far fewer queries than random.
+    The ``noise`` parameter adds Gaussian noise with the specified standard deviation.
 
     Returns a DataFrame on a regular grid (``n_per_dim`` points per axis) with the same
-    columns as ``load_panda`` (``source == "synthetic"``). ``df.attrs["optimum_row"]`` is
-    the index of the grid point closest to the true optimum.
+    columns as ``load_panda`` (``source == "synthetic"``). ``df.attrs["optimum_row"]``
+    identifies the first maximum in the sampled grid, including any added noise.
     """
     rng = np.random.default_rng(seed)
     bounds = {

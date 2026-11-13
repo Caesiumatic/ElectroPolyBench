@@ -1,20 +1,20 @@
 """Acquisition strategies for pool-based active learning.
 
-Every strategy has the SAME signature and is completely dataset-agnostic::
+Strategies share a dataset-independent interface::
 
     next_index = strategy(X, revealed_idx, revealed_y, unrevealed_idx, surrogate, rng)
 
 where
-  X             : (n_pool, n_dim) features for the WHOLE finished pool
+  X             : (n_pool, n_dim) features for the complete experimental pool
   revealed_idx  : 1-D int array of pool indices already revealed
   revealed_y    : 1-D float array of revealed objective values (aligned with revealed_idx)
   unrevealed_idx: 1-D int array of candidate pool indices not yet revealed
   surrogate     : a fitted Surrogate (already fit on the revealed data), or None
   rng           : a numpy Generator for reproducible tie-breaking / random choices
 
-The strategy returns ONE global pool index drawn from ``unrevealed_idx``.
+Each strategy returns one global pool index from ``unrevealed_idx``.
 
-Objective convention: we MAXIMIZE y (e.g. ΔE00 electrochromic contrast).
+The objective y is maximized (e.g. ΔE00 electrochromic contrast).
 """
 
 from __future__ import annotations
@@ -35,12 +35,12 @@ def random(X, revealed_idx, revealed_y, unrevealed_idx, surrogate, rng) -> int:
 
 
 def space_filling(X, revealed_idx, revealed_y, unrevealed_idx, surrogate, rng) -> int:
-    """Max-min distance (greedy coverage / LHS-like) baseline.
+    """Select by max-min distance in standardized feature space.
 
     Pick the unrevealed point whose distance to its nearest already-revealed point is
     largest, i.e. fill the most empty region of input space. Distances are computed in
-    standardized input space so that physical units don't dominate. This is a strong,
-    surrogate-free baseline that AL has to beat to justify itself.
+    standardized input space so that physical units do not dominate. This baseline
+    measures the value of feature-space coverage without fitting a surrogate.
     """
     X = np.asarray(X, dtype=float)
     mu = X.mean(axis=0)
@@ -96,8 +96,7 @@ STRATEGIES = {
     "ei": ei,
 }
 
-# Which strategies actually consult the surrogate (so the engine can skip fitting
-# when it would be pure overhead).
+# Fit a surrogate only for strategies that use its predictions.
 NEEDS_SURROGATE = {"greedy_exploit", "ucb", "ei"}
 
 
