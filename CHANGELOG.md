@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-11-13 — repository rename
+
+- Renamed `Caesiumatic/ElectroPolyBench` to `Caesiumatic/electropoly-active-compute` and updated the README and status titles. Package imports and experiment records retain their existing names.
+
 ## 2026-11-13 — documentation and comment clarity
 
 - Reframed the overview around query efficiency in a fixed experimental pool, keeping every recorded strategy result and its scope.

@@ -1,4 +1,4 @@
-# ElectroPolyBench status
+# electropoly-active-compute status
 
 ## Current state
 
@@ -17,6 +17,8 @@ outputs, confidence intervals, and source entry points.
 
 ## Documentation verification — 2026-11-13
 
+- Renamed the repository to `electropoly-active-compute` and updated the README
+  title; the Python package remains `electropolybench`.
 - Revised the overview and comments to describe the fixed-pool comparison,
   explicit synthetic selection, and target-threshold definitions directly.
 - Checked Python syntax trees with docstrings removed and token streams with

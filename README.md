@@ -1,4 +1,4 @@
-# ElectroPolyBench
+# electropoly-active-compute
 
 ElectroPolyBench measures how many experiments a query strategy needs to find
 high-performing electropolymerization conditions. It replays a completed
